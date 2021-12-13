@@ -35,7 +35,7 @@ namespace MedeniyetTur.Utils
         }
         public int AddTur(Tur tur)
         {
-            string sql = "INSERT INTO tur (id, price, date, description, image) Values (@Id, @Price, @Date, @Description, @Image);";
+            string sql = "INSERT INTO tur (name, price, date, description, image) Values (@Name, @Price, @Date, @Description, @Image);";
             var result = _conn.Execute(sql, tur);
             return result;
         }
@@ -54,7 +54,7 @@ namespace MedeniyetTur.Utils
 
         public int AddUser(User user)
         {
-            string sql = "INSERT INTO user (id, name, surname, birthDate, email, phoneNumber, tc) Values (@Id, @Name, @Surname, @BirthDate, @Email, @PhoneNumber, @Tc);";
+            string sql = "INSERT INTO user (name, surname, birthDate, email, phoneNumber, tc) Values (@Name, @Surname, @BirthDate, @Email, @PhoneNumber, @Tc);";
             var result = _conn.Execute(sql, user);
             return result;
         }

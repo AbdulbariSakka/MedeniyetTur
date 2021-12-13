@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MedeniyetTur.Models;
 using MedeniyetTur.Utils;
+using System.IO;
 
 namespace MedeniyetTur.Controllers
 {
@@ -21,6 +22,23 @@ namespace MedeniyetTur.Controllers
             Tur tur = turDb.GetTur(id);
 
             return tur;
+        }
+
+        [HttpGet("/image/{id}")]
+        public ActionResult<Tur> GetImage(string id)
+        {
+
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images", id);
+            MemoryStream stream = new MemoryStream();
+           
+            using (var fs = System.IO.File.Open(path, FileMode.Open))
+            {
+                fs.CopyTo(stream);
+            }
+        
+            stream.Position = 0; //reset memory stream position.
+
+            return File(stream, "image/jpeg");
         }
 
         [HttpGet]
@@ -55,6 +73,12 @@ namespace MedeniyetTur.Controllers
         [HttpPost]
         public IActionResult AddTur([FromForm] Tur tur)
         {
+            if (tur.ImageFile != null)
+            {
+                string imageName = SaveImage(tur.ImageFile);
+                tur.Image = imageName;
+            }
+
             int result = turDb.AddTur(tur);
             return Ok(result);
         }
@@ -62,6 +86,11 @@ namespace MedeniyetTur.Controllers
         [HttpPut]
         public IActionResult UpdateTur([FromForm] Tur tur)
         {
+            if (tur.ImageFile != null)
+            {
+                string imageName = SaveImage(tur.ImageFile);
+                tur.Image = imageName;
+            }
             int result = turDb.UpdateTur(tur);
             return Ok(result);
         }
@@ -72,5 +101,26 @@ namespace MedeniyetTur.Controllers
             return Ok(result);
         }
 
+
+        private string SaveImage(IFormFile file)
+        {
+            using (var ms = new MemoryStream())
+            {
+                file.CopyTo(ms);
+                var fileBytes = ms.ToArray();
+
+                string dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");
+
+                string imageName = $"{Guid.NewGuid().ToString()}-{file.FileName}";
+
+                string path = Path.Combine(dir, imageName);
+
+                Directory.CreateDirectory(dir);
+
+                System.IO.File.WriteAllBytes(path, fileBytes);
+
+                return imageName;
+            }
+        }
     }
 }

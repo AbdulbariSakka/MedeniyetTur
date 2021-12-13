@@ -16,7 +16,7 @@ namespace MedeniyetTur.Controllers
         SqlDbHelper turDb = new SqlDbHelper();
 
         [HttpPost]
-        public IActionResult Pay([FromForm] User user)
+        public IActionResult Pay([FromBody] User user)
         {
             int result = turDb.AddUser(user);
             return Ok(result);
