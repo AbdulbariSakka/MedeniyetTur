@@ -70,6 +70,16 @@ namespace MedeniyetTur.Controllers
             return turs;
         }
 
+        [HttpGet]
+        [Route("[action]")]
+        public ActionResult<List<Tur>> GetBoughtTurs()
+        {
+            List<Tur> turs = new List<Tur>();
+            turs = turDb.GetTurs().Where(t => t.Bought == true).ToList();
+            
+            return turs;
+        }
+
         [HttpPost]
         public IActionResult AddTur([FromForm] Tur tur)
         {
@@ -101,7 +111,29 @@ namespace MedeniyetTur.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("[action]/{id}")]
+        public void BuyTur(int id)
+        {
+            Tur tur = turDb.GetTur(id);
+            tur.BuyDate = DateTime.UtcNow.Day;
+            tur.Bought = true;
+            turDb.UpdateTur(tur);
+        }
 
+        [Route("[action]/{id}")]
+        public IActionResult CancelTur(int id)
+        {
+            Tur tur = turDb.GetTur(id);
+            if(tur.BuyDate - DateTime.UtcNow.Day < 5)
+            {
+                tur.Bought = false;
+                turDb.UpdateTur(tur);
+                return Ok();
+            }
+            return BadRequest();
+            
+        }
         private string SaveImage(IFormFile file)
         {
             using (var ms = new MemoryStream())

@@ -21,5 +21,14 @@ namespace MedeniyetTur.Controllers
             int result = turDb.AddUser(user);
             return Ok(result);
         }
+
+        [HttpPost("{id}")]
+        [Route("[action]")]
+        public IActionResult pay1([FromBody] Card card)
+        {
+
+            int result = turDb.AddCard(card);
+            return Ok(result);
+        }
     }
 }

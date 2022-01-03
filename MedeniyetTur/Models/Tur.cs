@@ -15,6 +15,8 @@ namespace MedeniyetTur.Models
         public string Date { get; set; }
         public string Description { get; set; }
         public string Image { get; set; }
+        public bool Bought { get; set; } = false;
+        public int BuyDate { get; set; }
         public IFormFile ImageFile { get; set; }
     }
 }

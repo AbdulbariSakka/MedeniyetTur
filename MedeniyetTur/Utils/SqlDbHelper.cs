@@ -35,13 +35,14 @@ namespace MedeniyetTur.Utils
         }
         public int AddTur(Tur tur)
         {
-            string sql = "INSERT INTO tur (name, price, date, description, image) Values (@Name, @Price, @Date, @Description, @Image);";
+            string sql = "INSERT INTO tur (name, price, date, description, image, bought) Values (@Name, @Price, @Date, @Description, @Image, @Bought);";
             var result = _conn.Execute(sql, tur);
             return result;
         }
+
         public int UpdateTur(Tur tur)
         {
-            string sql = "UPDATE tur Set id=@Id, price=@Price, date=@Date, description=@Description, image=@Image WHERE id=@Id";
+            string sql = "UPDATE tur Set id=@Id, price=@Price, date=@Date, description=@Description, image=@Image, bought=@Bought WHERE id=@Id";
             var result = _conn.Execute(sql, tur);
             return result;
         }
@@ -56,6 +57,13 @@ namespace MedeniyetTur.Utils
         {
             string sql = "INSERT INTO user (name, surname, birthDate, email, phoneNumber, tc) Values (@Name, @Surname, @BirthDate, @Email, @PhoneNumber, @Tc);";
             var result = _conn.Execute(sql, user);
+            return result;
+        }
+
+        public int AddCard(Card card)
+        {
+            string sql = "INSERT INTO card (cardNumber, fullName, month, year, cvv) Values (@CardNumber, @FullName, @Month, @Year, @Cvv);";
+            var result = _conn.Execute(sql, card);
             return result;
         }
     }
